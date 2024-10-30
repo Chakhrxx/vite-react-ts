@@ -13,7 +13,7 @@ const VITE_API_KEY = process.env.VITE_API_KEY || "x-api-key"; // API key for aut
 module.exports = {
   apps: [
     {
-      name: "vite-react", // Application name
+      name: "vite-nginx", // Application name
       script: "./server.js", // Entry point of the application
       exec_mode: "cluster", // Enable clustering for better performance
       instances: INSTANCES, // Use specified number of instances or maximum available

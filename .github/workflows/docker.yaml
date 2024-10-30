@@ -1,0 +1,80 @@
+name: Deploy application with Docker
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  web-deploy:
+    name: 🚀 Deploy Vite application to Production
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🚚 Get Latest Code
+        uses: actions/checkout@v3
+
+     - name: 💬 Check commit message
+        id: check-message
+        run: |
+          COMMIT_MESSAGE=$(git log -1 --pretty=%B)
+          echo "Commit message: $COMMIT_MESSAGE"
+          if [[ "$COMMIT_MESSAGE" == *"[deploy docker]"* ]]; then
+            echo "deploy_method=docker" >> $GITHUB_ENV
+          else
+            echo "deploy_method=none" >> $GITHUB_ENV
+          fi
+
+      - name: 🖥️ Set up Bun
+        if: env.deploy_method == 'docker'
+        uses: oven-sh/setup-bun@v1
+
+      - name: 📦 Install dependencies
+        if: env.deploy_method == 'docker'
+        run: bun install
+
+      - name: 💿 Build the app
+        if: env.deploy_method == 'docker'
+        run: bun run build
+
+      - name: 🔧 Configure SSH
+        if: env.deploy_method == 'docker'
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.SERVER_DOMAIN }} > ~/.ssh/known_hosts
+      
+      - name: 💽 Copy files to the server
+        if: env.deploy_method == 'docker'
+        run: |
+          rsync -azP --delete -e "ssh -o StrictHostKeyChecking=no" ./ ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_DOMAIN }}:~/app
+
+      - name: 🐳 Deploy with Docker
+        if: env.deploy_method == 'docker'
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_DOMAIN }} 'bash -s' << 'EOF'
+            # Navigate to the application directory
+            cd ~/app
+
+            # Create or update the .env file with environment variables
+            echo "${{ secrets.ENV_CONTENT }}" > .env
+
+            # Remove the Docker stack for the vite-nginx if it exists
+            docker stack rm vite-nginx || true
+
+            # Build the Docker image for the application
+            docker build -f Dockerfile -t vite-nginx:latest .
+
+            # Stop any processes currently using port 80 and kill them
+            sudo lsof -t -i :80 | xargs sudo kill -9 || true
+            
+            # Stop any running PM2 processes for the vite-nginx application
+            pm2 delete vite-nginx || true
+
+            # Deploy the updated Docker stack
+            docker stack deploy -c docker-compose.yaml vite-nginx
+
+            # Clean up unused Docker containers
+            docker container prune -f
+          EOF

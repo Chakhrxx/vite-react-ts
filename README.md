@@ -78,7 +78,7 @@ To manage your application using Docker, follow these steps:
    ```
 2. build the Docker image:
    ```bash
-   docker build -f Dockerfile -t vite-react-ts:latest .
+   docker build -f Dockerfile -t vite-nginx:latest .
    ```
 3. deploy the stack:
    ```bash
@@ -88,10 +88,6 @@ To manage your application using Docker, follow these steps:
    ```bash
    docker container prune -f
    ```
-
-
-
-
 
 
 ## Testing

@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   vite:
-    image: vite-react-ts:latest 
+    image: vite-nginx:latest 
     environment:
       PORT: 5173 
       VITE_API_URL: ${VITE_API_URL}  
