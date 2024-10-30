@@ -13,7 +13,7 @@ jobs:
       - name: 🚚 Get Latest Code
         uses: actions/checkout@v3
 
-     - name: 💬 Check commit message
+      - name: 💬 Check commit message
         id: check-message
         run: |
           COMMIT_MESSAGE=$(git log -1 --pretty=%B)
