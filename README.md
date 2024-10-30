@@ -9,6 +9,9 @@ This project is a boilerplate for building a React application using Vite. It in
 - [Production](#production)
    - [PM2](#pm2)
    - [Docker](#docker)
+- [Git Action CI/CD](#git-action)
+   - [PM2](#deploying-with-pm2)
+   - [Docker](#deploying-with-docker)
 - [Testing](#testing)
 - [Scripts](#scripts)
 
@@ -89,6 +92,26 @@ To manage your application using Docker, follow these steps:
    docker container prune -f
    ```
 
+## Git Action
+
+This section outlines the steps to deploy your application using Docker and PM2 via Git commit messages.
+
+### Deploying with PM2
+To deploy your application using PM2, follow these steps:
+1. Make your changes and commit them with the following message format:
+   ```bash
+   git commit -m `"[deploy pm2]  your_message`
+   ```
+2. Push your changes to trigger the CI/CD pipeline that will start or restart your application using PM2.
+
+### Deploying with Docker
+To deploy your application using Docker, follow these steps:
+1. Make your changes and commit them with the following message format:
+   ```bash
+   git commit -m `"[deploy docker]  your_message`
+   ```
+2. Push your changes to trigger the CI/CD pipeline that will build and deploy your Docker image.
+  
 
 ## Testing
 
