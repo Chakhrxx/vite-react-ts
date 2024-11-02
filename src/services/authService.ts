@@ -1,10 +1,11 @@
-import { axiosInstance } from "@/libs/axios";
-import { SignUpRequest, SignUpResponse } from "@/types/auth";
-import { User } from "@/types/user";
+// src/services/authService.ts
+import { axiosInstance } from "@/libs/axios"; // axios instance for API calls
+import { SignUpResponse } from "@/types/auth"; // sign upp response type definition
+import { User } from "@/types/user"; // User type definition
 
 export const authService = {
   // Sign up a new user with provided information
-  signUp: (data: SignUpRequest): Promise<SignUpResponse> => {
+  signUp: (data: User): Promise<SignUpResponse> => {
     return axiosInstance
       .post<SignUpResponse>("/auth/sign-up", data)
       .then((response) => response.data) // Return the response data
@@ -13,14 +14,21 @@ export const authService = {
         throw error; // Re-throw the error for further handling
       });
   },
-
-  // Retrieve the profile of the currently authenticated user
-  getProfile: async (): Promise<User> => {
+  signOut: () => {
     return axiosInstance
-      .get<User>("/me")
-      .then((response) => response.data) // Return the user profile data from the response
+      .post("/auth/sign-out")
+      .then(() => console.log("Successfully signed out"))
       .catch((error) => {
-        console.error("Error fetching user profile:", error);
+        console.error("Error during sign out:", error); // Log the error
+        throw error; // Re-throw the error for further handling
+      });
+  },
+  retrieveUser: (): Promise<User> => {
+    return axiosInstance
+      .get<User>("/auth/me")
+      .then((response) => response.data) // Return the response data
+      .catch((error) => {
+        console.error("Error during sign up:", error); // Log the error
         throw error; // Re-throw the error for further handling
       });
   },

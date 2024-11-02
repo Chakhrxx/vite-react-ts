@@ -1,5 +1,5 @@
 // src/libs/axios.ts
-import axios from "axios";
+import axios from "axios"; // necessary package
 
 // Set API URL and API key from environment variables
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000/api";

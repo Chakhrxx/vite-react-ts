@@ -43,23 +43,10 @@ export default defineConfig({
     port: 5173,
     strictPort: true,
     host: true,
-    // https: {
-    //   key: "./vite_private.key",
-    //   cert: "./vite_certificate.crt",
-    // },
   },
   server: {
     port: 5173,
     strictPort: true,
     host: true,
-    // https: {
-    //   key: "./vite_private.key",
-    //   cert: "./vite_certificate.crt",
-    // },
   },
-  build: {
-    outDir: "dist",
-    assetsDir: "assets",
-  },
-  base: "/",
 });

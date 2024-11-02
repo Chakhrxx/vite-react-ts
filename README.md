@@ -7,11 +7,11 @@ This project is a boilerplate for building a React application using Vite. It in
 - [Installation](#installation)
 - [Development](#development)
 - [Production](#production)
-   - [PM2](#pm2)
-   - [Docker](#docker)
+  - [PM2](#pm2)
+  - [Docker](#docker)
 - [Git Action CI/CD](#git-action)
-   - [PM2](#deploying-with-pm2)
-   - [Docker](#deploying-with-docker)
+  - [PM2](#deploying-with-pm2)
+  - [Docker](#deploying-with-docker)
 - [Testing](#testing)
 - [Scripts](#scripts)
 
@@ -59,6 +59,7 @@ bun run build
 ```
 
 ## PM2
+
 To start the application in production mode using PM2, run:
 
 ```bash
@@ -77,17 +78,15 @@ To manage your application using Docker, follow these steps:
 
 1. remove any existing stack:
    ```bash
-   docker stack rm vite-nginx || true
+   docker-compose -f docker-compose.yaml -p vite-nginx down --volumes --remove-orphans || true
    ```
-2. build the Docker image:
+2. build and start the Docker image in detached mode
+
    ```bash
-   docker build -f Dockerfile -t vite-nginx:latest .
+   docker-compose -f docker-compose.yaml -p vite-nginx up -d --build
    ```
-3. deploy the stack:
-   ```bash
-   docker stack deploy -c docker-compose.yaml vite-nginx
-   ```
-4. clean up unused containers:
+
+3. remove unused containers to free up resources
    ```bash
    docker container prune -f
    ```
@@ -97,7 +96,9 @@ To manage your application using Docker, follow these steps:
 This section outlines the steps to deploy your application using Docker and PM2 via Git commit messages.
 
 ### Deploying with PM2
+
 To deploy your application using PM2, follow these steps:
+
 1. Make your changes and commit them with the following message format:
    ```bash
    git commit -m `"[deploy pm2]  your_message`
@@ -105,13 +106,14 @@ To deploy your application using PM2, follow these steps:
 2. Push your changes to trigger the CI/CD pipeline that will start or restart your application using PM2.
 
 ### Deploying with Docker
+
 To deploy your application using Docker, follow these steps:
+
 1. Make your changes and commit them with the following message format:
    ```bash
    git commit -m `"[deploy docker]  your_message`
    ```
 2. Push your changes to trigger the CI/CD pipeline that will build and deploy your Docker image.
-  
 
 ## Testing
 
@@ -131,5 +133,3 @@ bun run open-coverage:windows   # Open coverage report on Window
 - Start: `pm2 start ecosystem.config.cjs --env production`
 - Restart: `pm2 restart ecosystem.config.cjs --env - production`
 - Run Tests: `bun run test`
-
-

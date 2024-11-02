@@ -1,3 +1,107 @@
+@import url("https://fonts.googleapis.com/css2?family=Castoro:ital@0;1&family=IBM+Plex+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Custom base styles */
+@layer base {
+}
+
+/* Custom component styles */
+@layer components {
+  /* Dynamic screen height utility */
+  .h-dynamic-screen {
+    height: 100vh; /* For browsers that don't support CSS variables */
+    height: calc(
+      var(--1dvh, 1vh) * 100
+    ); /* Polyfill for dynamic viewport height */
+    height: 100dvh; /* For future browsers that support svh, dvh, and lvh viewport units */
+  }
+}
+
+* {
+  @apply font-kanit;
+}
+
+/* Global styles for body and html */
+body,
+html {
+  max-height: -webkit-fill-available; /* Ensure max height is available in webkit browsers */
+  -o-appearance: none; /* Remove default styling in Opera */
+  -webkit-appearance: none; /* Remove default styling in WebKit browsers */
+  -moz-appearance: none; /* Remove default styling in Firefox */
+  -ms-appearance: none; /* Remove default styling in Internet Explorer */
+  appearance: none; /* Remove default styling across all browsers */
+}
+
+/* Root element styles */
+#root {
+  background-color: white;
+  color: theme("colors.secondary");
+}
+.custom-checkbox {
+  display: flex;
+  align-items: center;
+}
+
+.custom-checkbox input {
+  display: none; /* Hide the default checkbox */
+}
+
+.checkmark {
+  width: 15px; /* Set your desired width */
+  height: 15px; /* Set your desired height */
+  border: 1.5px solid theme("colors.primary");
+  border-radius: 4px; /* Border radius */
+  position: relative;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.custom-checkbox input:checked + .checkmark {
+  background-color: theme("colors.primary");
+  border-color: theme("colors.primary");
+}
+
+.checkmark::after {
+  content: "";
+  display: none;
+  position: absolute;
+  left: 3.5px; /* Adjust for centering */
+  top: -1px; /* Adjust for centering */
+  width: 5px; /* Adjust size */
+  height: 12px; /* Adjust size */
+  border: solid theme("colors.secondary"); /* Checkmark color */
+  border-width: 0 1.5px 1.5px 0; /* Create a checkmark */
+  transform: rotate(45deg); /* Rotate to create a checkmark */
+}
+
+.custom-checkbox input:checked + .checkmark::after {
+  display: block; /* Show the checkmark when checked */
+}
+
+.custom-checkbox input:checked + .checkmark::after {
+  display: block; /* Show the checkmark when checked */
+}
+
+.tab-button-animation {
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.tab-button-animation:hover {
+  transform: scale(1); /* Slightly enlarge on hover */
+}
+
+.tab-button-animation:active {
+  transform: scale(0.85); /* Slightly shrink on click */
+}
+
+.signup-form input:-webkit-autofill {
+  background-color: theme(
+    "colors.primary"
+  ) !important; /* Replace with your primary color */
+  -webkit-box-shadow: 0 0 0 1000px theme("colors.primary") inset;
+  -webkit-text-fill-color: theme(
+    "colors.secondary"
+  ); /* Adjust to match your color scheme */
+}

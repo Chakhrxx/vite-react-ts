@@ -1,37 +1,34 @@
-version: "3.9"
-
 services:
   vite:
-    image: vite-nginx:latest 
-    environment:
-      PORT: 5173 
-      VITE_API_URL: ${VITE_API_URL}  
-      VITE_API_KEY: ${VITE_API_KEY} 
-    env_file: .env
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: vite-nginx:latest
+    env_file:
+      - .env
     deploy:
-      replicas: 2  # Define the number of replicas for scaling
-      restart_policy:
-        condition: on-failure  # Restart on failure
-      resources:
-        limits:
-          cpus: '0.5' 
-          memory: '512M' 
+      replicas: ${INSTANCES}
+    restart: always
     networks:
-      - vite-networks 
+      - vite-networks
 
   nginx:
-    image: nginx:1.27 
+    image: nginx:1.27.2
     volumes:
-      - ./nginx.docker.conf:/etc/nginx/nginx.conf  # Mount custom Nginx configuration
+      - ./nginx.docker.conf:/etc/nginx/nginx.conf # Mount custom Nginx configuration
+      - nginx-logs:/var/log/nginx # Use a named volume for Nginx logs
     ports:
-      - '80:80' 
+      - "80:80"
     deploy:
-      replicas: 1  # Ensure only one instance of Nginx runs
+      replicas: 1 # Ensure only one instance of Nginx runs
       restart_policy:
-        condition: on-failure  # Restart on failure
+        condition: on-failure # Restart on failure
     networks:
-      - vite-networks  
+      - vite-networks
 
 networks:
   vite-networks:
-    driver: overlay  # Use an overlay network for multi-host communication
+    driver: bridge
+
+volumes:
+  nginx-logs: # Define the named volume for Nginx logs

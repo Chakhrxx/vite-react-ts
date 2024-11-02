@@ -1,28 +1,42 @@
-# Use the official Bun image as the base
-FROM oven/bun:1 AS base
+# Use a base image with Bun pre-installed
+FROM oven/bun:latest AS builder
 
-# Set the working directory inside the container
+# Set the working directory
 WORKDIR /app
 
-# Copy the package.json, tsconfig.json, and bun.lockb files from the build context to the working directory
-COPY ./package.json ./
-COPY ./tsconfig.json ./
-COPY ./bun.lockb ./
+# Copy the package.json, tsconfig.json, and bun.lockb files to the working directory
+COPY ./package.json ./tsconfig.json ./bun.lockb ./
 
-# Install application dependencies using Bun
+# Install dependencies using Bun
 RUN bun install
 
-# Copy the remaining application files from the build context to the working directory
+# Copy the rest of the application code
 COPY . .
 
-# Build the application for production
+# Build the NestJS application
 RUN bun run build
 
-ENV VITE_API_URL $VITE_API_URL
-ENV VITE_API_KEY $VITE_API_KEY
+# Use a lightweight image to serve the application
+FROM builder AS production
 
-# Expose the port on which the app will run
+# Set the working directory in the production image
+WORKDIR /app
+
+# Copy built files and .env file from the builder image
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/.env ./
+
+# Copy the package.json, tsconfig.json, and bun.lockb files to the working directory
+COPY ./package.json ./tsconfig.json ./bun.lockb ./
+
+# Install only the production dependencies
+RUN bun install --frozen-lockfile --production
+
+# Expose the port the app runs on
 EXPOSE 5173
 
-# Define the command to start the built application
-CMD ["bun", "run", "start"]
+# Command to run the NestJS application
+CMD ["bun", "run","start"]
+
+
+

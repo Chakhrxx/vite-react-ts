@@ -1,12 +1,15 @@
 import { createBrowserRouter } from "react-router-dom";
-import RootLayout from "./pages/layout";
-import HomePage from "./pages/user/home";
-import HomeLayout from "./pages/user/home/layout";
-import HomeStatePage from "./pages/user/home/state";
-import ProfileLayout from "./pages/user/profile/layout";
-import ProfilePage from "./pages/user/profile";
-import NotFoundPage from "./pages/notFound";
-import ErrorPage from "./pages/error";
+import RootLayout from "@/pages/layout";
+import HomeLayout from "@/pages/user/home/layout";
+import WelcomePage from "@/pages/user/home/welcome";
+import HomePage from "@/pages/user/home";
+import NotFoundPage from "@/pages/notFound";
+import ErrorPage from "@/pages/error";
+import SignUpLayout from "@/pages/signUp/layout";
+import SignUpPage from "@/pages/signUp";
+import StartLayout from "./pages/user/start/layout";
+import StartPage from "@/pages/user/start";
+import ScenePage from "./pages/user/start/scene";
 
 export const router = createBrowserRouter(
   [
@@ -15,16 +18,16 @@ export const router = createBrowserRouter(
       errorElement: <ErrorPage />,
       children: [
         {
+          path: "/start",
+          element: <StartLayout />,
           children: [
             {
-              path: "/profile",
-              element: <ProfileLayout />,
-              children: [
-                {
-                  path: "",
-                  element: <ProfilePage />,
-                },
-              ],
+              path: "", // This is the default path for /start
+              element: <StartPage />,
+            },
+            {
+              path: "scene", // Change to relative path
+              element: <ScenePage />,
             },
           ],
         },
@@ -37,14 +40,24 @@ export const router = createBrowserRouter(
               element: <HomePage />,
             },
             {
-              path: "/state",
-              element: <HomeStatePage state="Hello world!" />,
-            },
-            {
-              path: "*", // Catch-all route for 404 Not Found
-              element: <NotFoundPage />,
+              path: "welcome", // Change to relative path
+              element: <WelcomePage />,
             },
           ],
+        },
+        {
+          path: "/sign-up", // Catch-all route for 404 Not Found
+          element: <SignUpLayout />,
+          children: [
+            {
+              path: "",
+              element: <SignUpPage />,
+            },
+          ],
+        },
+        {
+          path: "*", // Catch-all route for 404 Not Found
+          element: <NotFoundPage />,
         },
       ],
     },

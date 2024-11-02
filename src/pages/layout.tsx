@@ -1,9 +1,12 @@
-import { Outlet } from "react-router-dom";
+// src/pages/layout
+import { Outlet } from "react-router-dom"; // Outlet for rendering nested routes
 
-export default function RootLayout() {
+const RootLayout = () => {
   return (
     <main className="max-w-md mx-auto h-dynamic-screen">
       <Outlet />
     </main>
   );
-}
+};
+
+export default RootLayout;
